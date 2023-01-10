@@ -1,1 +1,1 @@
-# smart-assistant-base
+# smart assistant base
