@@ -1,0 +1,28 @@
+recipe: default.v1
+version: "3.1"
+language: zh
+pipeline:
+  - name: JiebaTokenizer
+    dictionary_path: "data/jieba_dict/sj_dict.txt"
+  - name: RegexFeaturizer
+    use_word_boundaries: False
+  - name: LanguageModelFeaturizer
+    model_name: "bert"
+    model_weights: "hfl/chinese-roberta-wwm-ext-large"
+  - name: DIETClassifier
+    epochs: 300
+    tensorboard_log_directory: "./tensorboard"
+    tensorboard_log_level: "epoch"
+    transformer_size: 768
+    embedding_dimension: 120
+    batch_size: [128, 1280]
+  - name: DucklingEntityExtractor
+    url: http://service-duckling.faq-test.svc.cluster.local:8000
+    dimensions:
+      - time
+    locale: zh_TW
+policies:
+  - name: MemoizationPolicy
+  - name: TEDPolicy
+    epochs: 200
+  - name: RulePolicy

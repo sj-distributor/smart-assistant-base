@@ -1,0 +1,295 @@
+version: "3.1"
+session_config:
+  session_expiration_time: 10
+  carry_over_slots_to_new_session: false
+intents:
+  - affirm
+  - ask_food_details
+  - complain
+  - deny
+  - followup
+  - goodbye
+  - greet
+  - stop_form
+  - send_email
+entities:
+  - amount-of-money
+  - time
+  - wechat-username
+  - food_name
+slots:
+  wechat-username:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: reminder_form
+            requested_slot: wechat-username
+  reminder-datetime:
+    type: any
+    mappings:
+      - type: from_entity
+        entity: time
+  reminder-text:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: reminder_form
+            requested_slot: reminder-text
+  reminder-recurrent:
+    type: bool
+    influence_conversation: false
+    mappings:
+      - type: from_intent
+        intent: affirm
+        value: true
+        conditions:
+          - active_loop: reminder_form
+            requested_slot: reminder-recurrent
+      - type: from_intent
+        intent: deny
+        value: false
+        conditions:
+          - active_loop: reminder_form
+            requested_slot: reminder-recurrent
+  group-name:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: create_wechat_group_form
+            requested_slot: group-name
+  group-owner:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: create_wechat_group_form
+            requested_slot: group-owner
+  group-userlist:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: create_wechat_group_form
+            requested_slot: group-userlist
+  group-first-message:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: create_wechat_group_form
+            requested_slot: group-first-message
+  qty:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: add_to_order_form
+            requested_slot: qty
+  food_id:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: add_to_order_form
+            requested_slot: food_id
+  to_language_code:
+    type: categorical
+    initial_value: en_US
+    values:
+      - en_US
+      - zh_CN
+      - zh_TW
+    influence_conversation: true
+    mappings:
+      - type: custom
+        conditions:
+          - active_loop: send_email_form
+            requested_slot: to_language_code
+  recipient_emails:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: send_email_form
+            requested_slot: recipient_emails
+  original_content:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: send_email_form
+            requested_slot: original_content
+  translated_content:
+    type: text
+    initial_value: place_holder
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: send_email_form
+            requested_slot: translated_content
+forms:
+  reminder_form:
+    required_slots:
+      - wechat-username
+      - reminder-text
+      - reminder-datetime
+      - reminder-recurrent
+  create_wechat_group_form:
+    required_slots:
+      - group-name
+      - group-owner
+      - group-userlist
+      - group-first-message
+  add_to_order_form:
+    required_slots:
+      - qty
+      - food_id
+  send_email_form:
+    required_slots:
+      - recipient_emails
+      - to_language_code
+      - original_content
+      - translated_content
+responses:
+  utter_greet:
+    - text: 你好，很高兴为你服务
+    - text: 有什么我可以帮忙的
+    - text: 在的
+  utter_goodbye:
+    - text: Bye
+    - text: Cya
+    - text: 再見
+  utter_thank:
+    - text: 感謝你，祝你生活愉快
+  utter_customer_service:
+    - text: 很抱歉，我暫時沒有足夠到知識幫到你，我目前只能帮你追进度
+  utter_affirm:
+    - text: 收到!
+
+  utter_submit_reminder_form:
+    - text: 正在為您提交，請稍等
+    - text: 我正在為你處理，請耐心等候
+
+  utter_submit_create_wechat_group_form:
+    - text: 正在為您提交，請稍等
+    - text: 我正在為你處理，請耐心等候
+
+  utter_ask_reminder_form_wechat-username:
+    - text: 請輸入需要被通知同事的企業微信號
+  utter_ask_reminder_form_reminder-datetime:
+    - text: 請輸入需要通知的時間
+  utter_ask_reminder_form_reminder-text:
+    - text: 請輸入通知的內容
+  utter_ask_reminder_form_reminder-recurrent:
+    - text: 請問這個是循環事件嗎
+  utter_reminder_form_slot_values:
+    - text: 好的，我都清楚了，這些是內容細節：用戶： {wechat-username}, 時間： {reminder-datetime}, 內容： {reminder-text}, 是否循環時間： {reminder-recurrent}
+  utter_ask_create_wechat_group_form_group-name:
+    - text: 請輸入群的名稱
+    - text: ok，麻煩提供一下群的名字
+  utter_ask_create_wechat_group_form_group-owner:
+    - text: 請輸入群主的企業微信ID
+    - text: 我需要一下群主的企業微信ID
+  utter_ask_create_wechat_group_form_group-userlist:
+    - text: 請輸入成員ID，注意用逗號或分號隔開，比如 michael,lisa或michael;list
+  utter_ask_create_wechat_group_form_group-first-message:
+    - text: 請輸入群的第一個信息
+  utter_create_wechat_group_form_slot_values:
+    - text: 好的，我都清楚了，這些是內容細節：群名： {group-name}, 群主： {group-owner}, 成員： {group-userlist}, 初始群信息： {group-first-message}
+  utter_ask_continue:
+    - text: 你確定需要停止當前的流程嗎？
+    - text: 確定需要停止嗎？
+  utter_stop_form:
+    - text: 好的，我會把已經輸入的數據也同時清理
+    - text: 明白，過程中所輸入的數據也會被一同清理，如果需要重新的話可以隨時叫我
+  utter_complain:
+    - text: 非常抱歉，我先了解一下情況，晚點再同步信息你
+  utter_ask_food_details:
+    - text: 請稍等，我查一下系統
+  utter_ask_add_to_cart:
+    - text: 請問需要我幫你下單嗎？
+
+  utter_ask_add_to_order_form_qty:
+    - text: 請問需要多少磅？
+  utter_ask_add_to_order_form_food_id:
+    - text: 請輸入物料號？
+
+  utter_ask_send_email_form_recipient_emails:
+    - text: 請輸入收件人的郵箱地址，可以通過逗號或分號隔開
+  utter_ask_send_email_form_to_language_code:
+    - text: 請輸入需要被翻譯成的語言代號Language code
+  utter_ask_send_email_form_original_content:
+    - text: 請輸入你要發的內容
+  utter_ask_send_email_form_translated_content:
+    - text: 請輸入翻譯後的郵件內容
+  utter_translated_content:
+    - text: 这个是翻译出来的内容：{translated_content}
+  utter_confirm_send_email:
+    - text: 这个是翻译后的内容：{translated_content}，请review并确认
+  utter_email_sent:
+    - text: 郵件已經成功發送
+    - text: 搞定了
+actions:
+  - action_fill_slots
+  - action_reset_all_slots
+  - action_add_item_to_order
+  - get_and_show_food_details
+  - action_submit_add_to_order_form
+  - action_prepare_email
+  - action_send_email
+
+  - utter_affirm
+  - utter_ask_add_to_cart
+  - utter_ask_continue
+  - utter_ask_food_details
+
+  - utter_ask_add_to_order_form_food_id
+  - utter_ask_add_to_order_form_qty
+
+  - utter_ask_create_wechat_group_form_group-name
+  - utter_ask_create_wechat_group_form_group-owner
+  - utter_ask_create_wechat_group_form_group-userlist
+  - utter_ask_create_wechat_group_form_group-first-message
+
+  - utter_ask_reminder_form_wechat-username
+  - utter_ask_reminder_form_reminder-datetime
+  - utter_ask_reminder_form_reminder-recurrent
+  - utter_ask_reminder_form_reminder-text
+
+  - utter_create_wechat_group_form_slot_values
+  - utter_reminder_form_slot_values
+
+  - utter_customer_service
+  - utter_goodbye
+  - utter_greet
+
+  - utter_stop_form
+
+  - utter_submit_reminder_form
+  - utter_submit_create_wechat_group_form
+
+  - utter_thank
+  - utter_complain
+
+  - utter_ask_send_email_form_recipient_emails
+  - utter_ask_send_email_form_to_language_code
+  - utter_ask_send_email_form_original_content
+  - utter_ask_send_email_form_translated_content
+
+  - utter_translated_content
+  - utter_confirm_send_email
+  - utter_email_sent
