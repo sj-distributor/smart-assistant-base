@@ -1,5 +1,0 @@
-# smart-assistant requirements
-# Usage: pip install -r requirements.txt
-
-# Base ----------------------------------------
-rasa[full]==3.2.8

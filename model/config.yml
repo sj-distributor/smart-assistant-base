@@ -8,7 +8,8 @@ pipeline:
     use_word_boundaries: False
   - name: LanguageModelFeaturizer
     model_name: "bert"
-    model_weights: "hfl/chinese-roberta-wwm-ext-large"
+    model_weights: "bert-base-multilingual-cased"
+    cache_dir: "pretrain_models"
   - name: DIETClassifier
     epochs: 300
     tensorboard_log_directory: "./tensorboard"
