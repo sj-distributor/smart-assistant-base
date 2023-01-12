@@ -1,0 +1,26 @@
+version: 1
+disable_existing_loggers: false
+formatters:
+  normalFormatter:
+    format: '{"time": "%(asctime)s", "name": "[%(name)s]", "levelname": "%(levelname)s", "message": "%(message)s"}'
+handlers:
+  test_handler:
+    level: DEBUG
+    formatter: normalFormatter
+    class: logging.FileHandler
+    filename: "logging_test.log"
+  http:
+    class: logging.handlers.HTTPHandler
+    level: DEBUG
+    formatter: normalFormatter
+    host: localhost:5222
+    url: /api/logs
+    method: POST
+loggers:
+  root:
+    handlers: [test_handler]
+    level: DEBUG
+  rasa:
+    handlers: [http]
+    level: DEBUG
+    propagate: 0
