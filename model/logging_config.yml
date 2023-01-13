@@ -11,7 +11,7 @@ handlers:
     filename: "logging_test.log"
   http:
     class: logging.handlers.HTTPHandler
-    level: DEBUG
+    level: INFO
     formatter: normalFormatter
     host: localhost:5222
     url: /api/smartassistant/training/logs
