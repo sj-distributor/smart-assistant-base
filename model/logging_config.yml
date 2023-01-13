@@ -13,7 +13,7 @@ handlers:
     class: logging.handlers.HTTPHandler
     level: INFO
     formatter: normalFormatter
-    host: localhost:5222
+    host: localhost:80
     url: /api/smartassistant/training/logs
     method: POST
 loggers:
