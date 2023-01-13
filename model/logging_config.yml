@@ -1,0 +1,21 @@
+version: 1
+disable_existing_loggers: false
+formatters:
+  normalFormatter:
+    format: '{"time": "%(asctime)s", "name": "[%(name)s]", "levelname": "%(levelname)s", "message": "%(message)s"}'
+handlers:
+  http:
+    class: logging.handlers.HTTPHandler
+    level: INFO
+    formatter: normalFormatter
+    host: localhost:80
+    url: /api/smartassistant/training/logs
+    method: POST
+loggers:
+  root:
+    handlers: [http]
+    level: INFO
+  rasa:
+    handlers: [http]
+    level: INFO
+    propagate: 0
