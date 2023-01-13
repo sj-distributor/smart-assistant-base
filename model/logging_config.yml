@@ -9,7 +9,7 @@ handlers:
     level: INFO
     formatter: normalFormatter
     host: localhost:80
-    url: /api/smartassistant/training/logs
+    url: /api/smartassistant/logs
     method: POST
 loggers:
   root:
