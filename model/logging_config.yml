@@ -14,11 +14,11 @@ handlers:
     level: DEBUG
     formatter: normalFormatter
     host: localhost:5222
-    url: /api/logs
+    url: /api/smartassistant/training/logs
     method: POST
 loggers:
   root:
-    handlers: [test_handler]
+    handlers: []
     level: DEBUG
   rasa:
     handlers: [http]
