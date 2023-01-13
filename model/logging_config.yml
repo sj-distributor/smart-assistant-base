@@ -13,9 +13,9 @@ handlers:
     method: POST
 loggers:
   root:
-    handlers: []
-    level: DEBUG
+    handlers: [http]
+    level: INFO
   rasa:
     handlers: [http]
-    level: DEBUG
+    level: INFO
     propagate: 0
