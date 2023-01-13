@@ -4,11 +4,6 @@ formatters:
   normalFormatter:
     format: '{"time": "%(asctime)s", "name": "[%(name)s]", "levelname": "%(levelname)s", "message": "%(message)s"}'
 handlers:
-  test_handler:
-    level: DEBUG
-    formatter: normalFormatter
-    class: logging.FileHandler
-    filename: "logging_test.log"
   http:
     class: logging.handlers.HTTPHandler
     level: INFO
