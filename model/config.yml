@@ -2,8 +2,23 @@ recipe: default.v1
 version: "3.1"
 language: zh
 pipeline:
-  - name: JiebaTokenizer
-    dictionary_path: "data/jieba_dict/sj_dict.txt"
+  - name: "SpacyNLP"
+    # language model to load
+    model: "zh_core_web_sm"
+
+    # when retrieving word vectors, this will decide if the casing
+    # of the word is relevant. E.g. `hello` and `Hello` will
+    # retrieve the same vector, if set to `False`. For some
+    # applications and models it makes sense to differentiate
+    # between these two words, therefore setting this to `True`.
+    case_sensitive: False
+  - name: "SpacyTokenizer"
+    # Flag to check whether to split intents
+    "intent_tokenization_flag": False
+    # Symbol on which intent should be split
+    "intent_split_symbol": "_"
+    # Regular expression to detect tokens
+    "token_pattern": None
   - name: RegexFeaturizer
     use_word_boundaries: False
   - name: LanguageModelFeaturizer
@@ -12,11 +27,6 @@ pipeline:
     cache_dir: "pretrain_models"
   - name: DIETClassifier
     epochs: 300
-    tensorboard_log_directory: "./tensorboard"
-    tensorboard_log_level: "epoch"
-    transformer_size: 768
-    embedding_dimension: 120
-    batch_size: [128, 1280]
   - name: DucklingEntityExtractor
     url: http://service-duckling.faq-test.svc.cluster.local:8000
     dimensions:
