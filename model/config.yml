@@ -4,7 +4,7 @@ language: zh
 pipeline:
   - name: "SpacyNLP"
     # language model to load
-    model: "xx_sent_ud_sm"
+    model: "zh_core_web_lg"
 
     # when retrieving word vectors, this will decide if the casing
     # of the word is relevant. E.g. `hello` and `Hello` will
