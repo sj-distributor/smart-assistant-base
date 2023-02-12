@@ -35,5 +35,5 @@ pipeline:
 policies:
   - name: MemoizationPolicy
   - name: TEDPolicy
-    epochs: 200
+    epochs: 300
   - name: RulePolicy
